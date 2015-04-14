@@ -1,0 +1,1 @@
+require 'confidential_info_redactor'

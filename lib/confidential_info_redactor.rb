@@ -1,5 +1,3 @@
-require "confidential_info_redactor/version"
-
-module ConfidentialInfoRedactor
-  # Your code goes here...
-end
+require 'confidential_info_redactor/version'
+require 'confidential_info_redactor/extractor'
+require 'confidential_info_redactor/redactor'

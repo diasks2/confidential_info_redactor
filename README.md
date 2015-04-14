@@ -47,7 +47,6 @@ ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).redact
 # => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>.'
 
 # German Example
-
 text = 'Viele Mitarbeiter der Deutschen Bank suchen eine andere Arbeitsstelle.'
 
 tokens = ConfidentialInfoRedactor::Extractor.new(text: text, language: 'de').extract
