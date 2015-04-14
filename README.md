@@ -2,13 +2,15 @@
 
 A Ruby gem to semi-automatically redact confidential information from a text.
 
-This gem is a poor man's named-entity recognition (NER) library built to extract (and later redact) information in a text (such as proper nouns) that may be confidential. Your use case might vary, but the gem was written to then show the user the extracted tokens and let the user decide which ones should be redacted (or add missing tokens to the list).
+This gem is a poor man's named-entity recognition (NER) library built to extract (and later redact) information in a text (such as proper nouns) that may be confidential. 
 
-The way the gem works is rather simple. It uses regular expressions to search for capitalized tokens (one token, two token, etc.) and then checks whether those tokens match a list of the common vocabulary for that language (e.g. the x most frequent words - the size of x depending on what was available for that language). If the token does not matched it is added to an array of tokens that should be checked by the user as potential "confidential information".
+Your use case may vary, but the gem was written to first extract potential sensitive tokens from a text and then show the user the extracted tokens and let the user decide which ones should be redacted (or add missing tokens to the list).
 
-In the sentence "Pepsi and Coca-Cola battled for position in the market." the gem would extract "Pepsi" and "Coca-Cola" as pontential tokens to redact.
+The way the gem works is rather simple. It uses regular expressions to search for capitalized tokens (one token, two token, etc.) and then checks whether those tokens match a list of the common vocabulary for that language (e.g. the x most frequent words - the size of x depending on what is available for that language). If the token is not in the list of words for that language it is added to an array of tokens that should be checked by the user as potential "confidential information".
 
-In addition to seacrhing for proper nouns, the gem also has the functionality to redact numbers and dates.
+In the sentence "Pepsi and Coca-Cola battled for position in the market." the gem would extract "Pepsi" and "Coca-Cola" as potential tokens to redact.
+
+In addition to searching for proper nouns, the gem also has the functionality to redact numbers and dates.
 
 ## Install  
 
