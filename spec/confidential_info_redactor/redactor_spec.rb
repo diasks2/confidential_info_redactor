@@ -16,6 +16,11 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
       text = 'December 5, 2010 - Coca-Cola announced a merger with Pepsi.'
       expect(described_class.new(text: text, language: 'en').dates).to eq('<redacted date> - Coca-Cola announced a merger with Pepsi.')
     end
+
+    it 'redacts dates from a text #004' do
+      text = 'The scavenger hunt ends on Dec. 31st, 2011.'
+      expect(described_class.new(text: text, language: 'en').dates).to eq('The scavenger hunt ends on <redacted date>.')
+    end
   end
 
   describe '#numbers' do

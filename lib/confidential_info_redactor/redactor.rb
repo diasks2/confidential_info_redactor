@@ -50,7 +50,7 @@ module ConfidentialInfoRedactor
     end
 
     def redact_tokens(txt)
-      tokens.each do |token|
+      tokens.sort_by{ |x| x.split.count }.reverse.each do |token|
         txt.gsub!(/#{Regexp.escape(token)}/, "#{token_text}")
       end
       txt

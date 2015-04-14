@@ -28,7 +28,7 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
         expect(described_class.new(text: text, language: 'en').extract).to eq(['Deutsche Bank', 'Pepsi', 'Coke', 'Sprite'])
       end
 
-      it 'extracts the proper nouns from a text #005' do
+      it 'extracts the proper nouns from a text #006' do
         text = <<-EOF
           Putter King Miniature Golf Scavenger Hunt
 
@@ -78,7 +78,7 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
           Putter King Scavenger Hunt Trophy
           (6 3/4" Engraved Crystal Trophy - Picture Coming Soon)
 
-          The Putter King team will judge the scavenger hunt and all decisions will be final.  The scavenger hunt is open to anyone and everyone.  The scavenger hunt ends on Dec. 31st, 2011.
+          The Putter King team will judge the scavenger hunt and all decisions will be final. The U.S. Government is sponsoring it. The scavenger hunt is open to anyone and everyone.  The scavenger hunt ends on Dec. 31st, 2011.
 
           To enter the scavenger hunt, send an email to info AT putterking DOT com with the subject line: "Putter King Scavenger Hunt Submission".  In the email please include links to the pictures and videos you are submitting.  You can utilize free photo and video hosting sites such as YouTube, Flickr, Picasa, Photobucket, etc. for your submissions.
 
@@ -87,6 +87,11 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
           Don’t forget to use your imagination and creativity!
         EOF
         expect(described_class.new(text: text).extract).to eq([''])
+      end
+
+      it 'extracts the proper nouns from a text #007' do
+        text = 'I learned that Apple has plans to release a new iPhone, iPad and iWatch.'
+        expect(described_class.new(text: text, language: 'en').extract).to eq(['Apple', 'iPhone', 'iPad', 'iWatch'])
       end
     end
 

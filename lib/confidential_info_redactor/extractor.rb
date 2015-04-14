@@ -3,11 +3,12 @@ require 'confidential_info_redactor/word_lists'
 module ConfidentialInfoRedactor
   # This class extracts proper nouns from a text
   class Extractor
-    # Rubular: http://rubular.com/r/BrA6twGdaA
-    EXTRACT_REGEX = /((?<=\s)|(?<=^))[A-Z]\S*\s[A-Z]\S*\s[A-Z]\S*\s[A-Z]\S*(?=(\s|\.))|((?<=\s)|(?<=^))[A-Z]\S*\s[A-Z]\S*\s[A-Z]\S*(?=(\s|\.))|((?<=\s)|(?<=^))[A-Z]\S*\s[A-Z]\S*(?=(\s|\.))|((?<=\s)|(?<=^))[A-Z]\S*(?=(\s|\.))/
+    # Rubular: http://rubular.com/r/qE0g4r9zR7
+    # EXTRACT_REGEX = /(?<=\s|^|\s\")([A-Z]\S*\s)*[A-Z]\S*(?=(\s|\.))/
+    EXTRACT_REGEX = /(?<=\s|^|\s\")([A-Z]\S*\s)*[A-Z]\S*(?=(\s|\.))|(?<=\s|^|\s\")[i][A-Z][a-z]+/
     attr_reader :text, :language, :corpus
     def initialize(text:, **args)
-      @text = text.gsub(/’/, "'")
+      @text = text.gsub(/[’‘]/, "'")
       @language = args[:language] || 'en'
       case @language
       when 'en'
@@ -18,11 +19,13 @@ module ConfidentialInfoRedactor
     end
 
     def extract
-      initial_extracted_terms = text.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '')) }.compact
       extracted_terms = []
-      initial_extracted_terms.each do |ngram|
-        ngram.split(/[\?\.\)\(\!\\\/\"\:\;\,]/).each do |t|
-          extracted_terms << t.gsub(/[\?\.\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').strip)
+      PragmaticSegmenter::Segmenter.new(text: text, language: language).segment.each do |segment|
+        initial_extracted_terms = segment.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '')) }.compact
+        initial_extracted_terms.each do |ngram|
+          ngram.split(/[\?\)\(\!\\\/\"\:\;\,]/).each do |t|
+            extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').strip)
+          end
         end
       end
 
