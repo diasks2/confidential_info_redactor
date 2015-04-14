@@ -34,73 +34,73 @@ module ConfidentialInfoRedactor
       if counter > 0
         DOW_ABBR.each do |day|
           MONTHS.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
           end
           MONTH_ABBR.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
           end
         end
         DOW.each do |day|
           MONTHS.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                                   .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' wsdateword ')
-                                   .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' wsdateword ')
-                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' wsdateword ')
-                                   .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                                   .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' <redacted date> ')
+                                   .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' <redacted date> ')
+                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' <redacted date> ')
+                                   .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' <redacted date> ')
           end
           MONTH_ABBR.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                           .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' wsdateword ')
-                           .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' wsdateword ')
-                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' wsdateword ')
-                           .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                           .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' <redacted date> ')
+                           .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' <redacted date> ')
+                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' <redacted date> ')
+                           .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' <redacted date> ')
           end
         end
       else
         DOW.each do |day|
           MONTHS.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                                   .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' wsdateword ')
-                                   .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' wsdateword ')
-                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' wsdateword ')
-                                   .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                                   .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' <redacted date> ')
+                                   .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' <redacted date> ')
+                                   .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' <redacted date> ')
+                                   .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' <redacted date> ')
           end
           MONTH_ABBR.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
-                           .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' wsdateword ')
-                           .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' wsdateword ')
-                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' wsdateword ')
-                           .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
+                           .gsub(/\d{4}\.*\s#{Regexp.escape(month)}\s\d+(rd|th)*/i, ' <redacted date> ')
+                           .gsub(/\d{4}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*\d+/i, ' <redacted date> ')
+                           .gsub(/#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*/i, ' <redacted date> ')
+                           .gsub(/\d{2}(\.|-|\/)*#{Regexp.escape(month)}(\.|-|\/)*(\d{4}|\d{2})/i, ' <redacted date> ')
           end
         end
         DOW_ABBR.each do |day|
           MONTHS.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
           end
           MONTH_ABBR.each do |month|
-            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' wsdateword ')
+            new_string = new_string.gsub(/#{Regexp.escape(day)}(\.)*(,)*\s#{Regexp.escape(month)}(\.)*\s\d+(rd|th)*(,)*\s\d{4}/i, ' <redacted date> ')
           end
         end
       end
-      new_string = new_string.gsub(DMY_MDY_REGEX, ' wsdateword ')
-                     .gsub(YMD_YDM_REGEX, ' wsdateword ')
-                     .gsub(DIGIT_ONLY_YEAR_FIRST_REGEX, ' wsdateword ')
-                     .gsub(DIGIT_ONLY_YEAR_LAST_REGEX, ' wsdateword ')
+      new_string = new_string.gsub(DMY_MDY_REGEX, ' <redacted date> ')
+                     .gsub(YMD_YDM_REGEX, ' <redacted date> ')
+                     .gsub(DIGIT_ONLY_YEAR_FIRST_REGEX, ' <redacted date> ')
+                     .gsub(DIGIT_ONLY_YEAR_LAST_REGEX, ' <redacted date> ')
     end
 
     def occurences
-      replace.scan(/wsdateword/).size
+      replace.scan(/<redacted date>/).size
     end
 
     def replace_number_only_date
-      string.gsub(DMY_MDY_REGEX, ' wsdateword ')
-            .gsub(YMD_YDM_REGEX, ' wsdateword ')
-            .gsub(DIGIT_ONLY_YEAR_FIRST_REGEX, ' wsdateword ')
-            .gsub(DIGIT_ONLY_YEAR_LAST_REGEX, ' wsdateword ')
+      string.gsub(DMY_MDY_REGEX, ' <redacted date> ')
+            .gsub(YMD_YDM_REGEX, ' <redacted date> ')
+            .gsub(DIGIT_ONLY_YEAR_FIRST_REGEX, ' <redacted date> ')
+            .gsub(DIGIT_ONLY_YEAR_LAST_REGEX, ' <redacted date> ')
     end
 
     private

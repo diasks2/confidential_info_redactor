@@ -5,10 +5,14 @@ module ConfidentialInfoRedactor
   class Redactor
     # Rubular: http://rubular.com/r/aGqvObk6SL
     NUMBER_REGEX = /(?<=\A)\D?\d+((,|\.)*\d)*(\D?\s|\s|\.?\s|\.$)|(?<=\s)\D?\d+((,|\.)*\d)*(?=(\D?\s|\s|\.?\s|\.$))/
-    attr_reader :text, :language, :corpus
+    attr_reader :text, :language, :corpus, :number_text, :date_text, :token_text, :tokens
     def initialize(text:, **args)
       @text = text
       @language = args[:language] || 'en'
+      @tokens = args[:tokens]
+      @number_text = args[:number_text] || '<redacted number>'
+      @date_text = args[:date_text] || '<redacted date>'
+      @token_text = args[:token_text] || '<redacted>'
       case @language
       when 'en'
         @corpus = ConfidentialInfoRedactor::WordLists::EN_WORDS
@@ -18,15 +22,38 @@ module ConfidentialInfoRedactor
     end
 
     def dates
-      ConfidentialInfoRedactor::Date.new(string: text).replace.gsub(/\s*wsdateword\s*/, " <redacted date> ").gsub(/\A\s*<redacted date>\s*/, "<redacted date> ").gsub(/<redacted date>\s{1}\.{1}/, "<redacted date>.")
+      redact_dates(text)
     end
 
     def numbers
-      text.gsub(NUMBER_REGEX, ' <redacted number> ').gsub(/\s*<redacted number>\s*/, " <redacted number> ").gsub(/\A\s*<redacted number>\s*/, "<redacted number> ").gsub(/<redacted number>\s{1}\.{1}/, "<redacted number>.")
+      redact_numbers(text)
     end
 
-    def tokens
+    def proper_nouns
+      redact_tokens(text)
+    end
 
+    def redact
+      redacted_text = redact_dates(text)
+      redacted_text = redact_numbers(redacted_text)
+      redact_tokens(redacted_text)
+    end
+
+    private
+
+    def redact_dates(txt)
+      ConfidentialInfoRedactor::Date.new(string: txt).replace.gsub(/\s*#{Regexp.escape(date_text)}\s*/, " #{date_text} ").gsub(/\A\s*#{Regexp.escape(date_text)}\s*/, "#{date_text} ").gsub(/#{Regexp.escape(date_text)}\s{1}\.{1}/, "#{date_text}.")
+    end
+
+    def redact_numbers(txt)
+      txt.gsub(NUMBER_REGEX, " #{number_text} ").gsub(/\s*#{Regexp.escape(number_text)}\s*/, " #{number_text} ").gsub(/\A\s*#{Regexp.escape(number_text)}\s*/, "#{number_text} ").gsub(/#{Regexp.escape(number_text)}\s{1}\.{1}/, "#{number_text}.")
+    end
+
+    def redact_tokens(txt)
+      tokens.each do |token|
+        txt.gsub!(/#{Regexp.escape(token)}/, "#{token_text}")
+      end
+      txt
     end
   end
 end

@@ -1,8 +1,10 @@
 # Confidential Info Redactor
 
-A Ruby gem to semi-automatically redact confidential information from a text.
+Confidential Info Redactor is a Ruby gem to semi-automatically redact confidential information from a text.
 
 This gem is a poor man's named-entity recognition (NER) library built to extract (and later redact) information in a text (such as proper nouns) that may be confidential. 
+
+It differs from typical NER as it makes no attempt to identify whether a token is a person, company, location, etc. It only attempts to extract tokens that might fit into one of those categories.
 
 Your use case may vary, but the gem was written to first extract potential sensitive tokens from a text and then show the user the extracted tokens and let the user decide which ones should be redacted (or add missing tokens to the list).
 
@@ -43,6 +45,9 @@ ConfidentialInfoRedactor::Redactor.new(text: text).dates
 ConfidentialInfoRedactor::Redactor.new(text: text).numbers
 # => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for <redacted number>.'
 
+ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).proper_nouns
+# => '<redacted> announced a merger with <redacted> that will happen on December 15th, 2020 for $200,000,000,000.'
+
 ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).redact
 # => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>.'
 
@@ -55,6 +60,10 @@ tokens = ConfidentialInfoRedactor::Extractor.new(text: text, language: 'de').ext
 ConfidentialInfoRedactor::Redactor.new(text: text, language: 'de', tokens: tokens).redact
 # => 'Viele Mitarbeiter der <redacted> suchen eine andere Arbeitsstelle.'
 
+# It is also possible to change the redaction text
+tokens = ['Coca-Cola', 'Pepsi']
+ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact
+# => '***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**.'
 ```
 
 ## Contributing
