@@ -2,6 +2,14 @@
 
 A Ruby gem to semi-automatically redact confidential information from a text.
 
+This gem is a poor man's named-entity recognition (NER) library built to extract (and later redact) information in a text (such as proper nouns) that may be confidential. Your use case might vary, but the gem was written to then show the user the extracted tokens and let the user decide which ones should be redacted (or add missing tokens to the list).
+
+The way the gem works is rather simple. It uses regular expressions to search for capitalized tokens (one token, two token, etc.) and then checks whether those tokens match a list of the common vocabulary for that language (e.g. the x most frequent words - the size of x depending on what was available for that language). If the token does not matched it is added to an array of tokens that should be checked by the user as potential "confidential information".
+
+In the sentence "Pepsi and Coca-Cola battled for position in the market." the gem would extract "Pepsi" and "Coca-Cola" as pontential tokens to redact.
+
+In addition to seacrhing for proper nouns, the gem also has the functionality to redact numbers and dates.
+
 ## Install  
 
 **Ruby**  
@@ -18,7 +26,35 @@ gem 'confidential_info_redactor'
 
 ## Usage
 
-TODO
+* If no language is specified, the library will default to English.   
+* To specify a language use its two character [ISO 639-1 code](https://www.tm-town.com/languages).  
+
+```ruby
+text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000.'
+
+tokens = ConfidentialInfoRedactor::Extractor.new(text: text).extract
+# => ['Coca-Cola', 'Pepsi']
+
+ConfidentialInfoRedactor::Redactor.new(text: text).dates
+# => 'Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000.'
+
+ConfidentialInfoRedactor::Redactor.new(text: text).numbers
+# => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for <redacted number>.'
+
+ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).redact
+# => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>.'
+
+# German Example
+
+text = 'Viele Mitarbeiter der Deutschen Bank suchen eine andere Arbeitsstelle.'
+
+tokens = ConfidentialInfoRedactor::Extractor.new(text: text, language: 'de').extract
+# => ['Deutschen Bank']
+
+ConfidentialInfoRedactor::Redactor.new(text: text, language: 'de', tokens: tokens).redact
+# => 'Viele Mitarbeiter der <redacted> suchen eine andere Arbeitsstelle.'
+
+```
 
 ## Contributing
 
