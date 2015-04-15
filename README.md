@@ -39,6 +39,11 @@ text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15t
 tokens = ConfidentialInfoRedactor::Extractor.new(text: text).extract
 # => ["Coca-Cola", "Pepsi", "John Smith"]
 
+ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).redact
+# => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>. Please contact <redacted> at <redacted> or visit <redacted>.'
+
+# You can also just use a specific redactor
+
 ConfidentialInfoRedactor::Redactor.new(text: text).dates
 # => 'Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
@@ -53,9 +58,6 @@ ConfidentialInfoRedactor::Redactor.new(text: text).hyperlinks
 
 ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).proper_nouns
 # => '<redacted> announced a merger with <redacted> that will happen on December 15th, 2020 for $200,000,000,000. Please contact <redacted> at j.smith@example.com or visit http://www.super-fake-merger.com.'
-
-ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).redact
-# => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>. Please contact <redacted> at <redacted> or visit <redacted>.'
 
 # It is possible to 'turn off' any of the specific redactors
 
