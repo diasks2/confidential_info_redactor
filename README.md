@@ -77,16 +77,16 @@ ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, number_text: 
 # => '***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**.'
 ```
 
-Full options (`Redactor` class)
+#### Redactor class options
 * `language` *(optional - defaults to 'en' if not specified)*
-* `tokens` (optional - any tokens to redact from the text)
-* `number_text` (optional - change the text for redacted numbers; the standard is `<redacted number>`)
-* `date_text` (optional - change the text for redacted dates; the standard is `<redacted date>`)
-* `token_text` (optional - change the text for redacted tokens, emails and hyperlinks; the standard is `<redacted>`)
-* `ignore_emails` (optional - set to true if you do not want to redact emails)
-* `ignore_dates` (optional - set to true if you do not want to redact dates)
-* `ignore_numbers` (optional - set to true if you do not want to redact numbers)
-* `ignore_hyperlinks` (optional - set to true if you do not want to redact hyperlinks)
+* `tokens` *(optional - any tokens to redact from the text)
+* `number_text` (optional - change the text for redacted numbers; the standard is `<redacted number>`)*
+* `date_text` *(optional - change the text for redacted dates; the standard is `<redacted date>`)*
+* `token_text` *(optional - change the text for redacted tokens, emails and hyperlinks; the standard is `<redacted>`)*
+* `ignore_emails` *(optional - set to true if you do not want to redact emails)*
+* `ignore_dates` *(optional - set to true if you do not want to redact dates)*
+* `ignore_numbers` *(optional - set to true if you do not want to redact numbers)*
+* `ignore_hyperlinks` *(optional - set to true if you do not want to redact hyperlinks)*
 
 ## Contributing
 
