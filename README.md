@@ -16,6 +16,8 @@ In the sentence "Pepsi and Coca-Cola battled for position in the market." the ge
 
 In addition to searching for proper nouns, the gem also has the functionality to redact numbers, dates, emails and hyperlinks.
 
+This gem comes with built-in language support for English and German. If you are interested in other language support, check out [Confidential Info Redactor Lite](https://github.com/diasks2/confidential_info_redactor_lite) where you can supply your own language vocabulary files.
+
 ## Install  
 
 **Ruby**  
