@@ -14,6 +14,8 @@ module ConfidentialInfoRedactor
         @corpus = ConfidentialInfoRedactor::WordLists::EN_WORDS
       when 'de'
         @corpus = ConfidentialInfoRedactor::WordLists::DE_WORDS
+      else
+        @corpus = ConfidentialInfoRedactor::WordLists::EN_WORDS
       end
     end
 

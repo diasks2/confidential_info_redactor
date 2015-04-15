@@ -9,7 +9,7 @@ module ConfidentialInfoRedactor
     EMAIL_REGEX = /(?<=\A|\s)[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+(?=\z|\s|\.)/i
 
 
-    attr_reader :text, :language, :corpus, :number_text, :date_text, :token_text, :tokens, :ignore_emails, :ignore_dates, :ignore_numbers, :ignore_hyperlinks
+    attr_reader :text, :language, :number_text, :date_text, :token_text, :tokens, :ignore_emails, :ignore_dates, :ignore_numbers, :ignore_hyperlinks
     def initialize(text:, **args)
       @text = text
       @language = args[:language] || 'en'
@@ -21,12 +21,6 @@ module ConfidentialInfoRedactor
       @ignore_dates = args[:ignore_dates]
       @ignore_numbers = args[:ignore_numbers]
       @ignore_hyperlinks = args[:ignore_hyperlinks]
-      case @language
-      when 'en'
-        @corpus = ConfidentialInfoRedactor::WordLists::EN_WORDS
-      when 'de'
-        @corpus = ConfidentialInfoRedactor::WordLists::DE_WORDS
-      end
     end
 
     def dates
