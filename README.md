@@ -78,7 +78,7 @@ ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, number_text: 
 ```
 
 Full options (`Redactor` class)
-* `language` (optional - defaults to 'en' if not specified)
+* `language` *(optional - defaults to 'en' if not specified)*
 * `tokens` (optional - any tokens to redact from the text)
 * `number_text` (optional - change the text for redacted numbers; the standard is `<redacted number>`)
 * `date_text` (optional - change the text for redacted dates; the standard is `<redacted date>`)
