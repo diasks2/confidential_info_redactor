@@ -1,5 +1,7 @@
 # Confidential Info Redactor
 
+[![Gem Version](https://badge.fury.io/rb/confidential_info_redactor.svg)](http://badge.fury.io/rb/confidential_info_redactor) [![Build Status](https://travis-ci.org/diasks2/confidential_info_redactor.png)](https://travis-ci.org/diasks2/confidential_info_redactor) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/diasks2/confidential_info_redactor/blob/master/LICENSE.txt)
+
 Confidential Info Redactor is a Ruby gem to semi-automatically redact confidential information from a text.
 
 This gem is a poor man's named-entity recognition (NER) library built to extract (and later redact) information in a text (such as proper nouns) that may be confidential. 
