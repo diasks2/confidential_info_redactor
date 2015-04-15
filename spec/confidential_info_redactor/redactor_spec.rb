@@ -40,6 +40,20 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
     end
   end
 
+  describe '#emails' do
+    it 'redacts email addresses from a text #001' do
+      text = 'His email is john@gmail.com or you can try k.light@tuv.eu.us.'
+      expect(described_class.new(text: text, language: 'en').emails).to eq('His email is <redacted> or you can try <redacted>.')
+    end
+  end
+
+  describe '#hyperlinks' do
+    it 'redacts hyperlinks from a text #001' do
+      text = 'Visit https://www.tm-town.com for more info.'
+      expect(described_class.new(text: text, language: 'en').hyperlinks).to eq('Visit <redacted> for more info.')
+    end
+  end
+
   describe '#proper_nouns' do
     it 'redacts tokens from a text #001' do
       tokens = ['Coca-Cola', 'Pepsi']
