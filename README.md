@@ -74,7 +74,8 @@ ConfidentialInfoRedactor::Redactor.new(text: text, language: 'de', tokens: token
 # => 'Viele Mitarbeiter der <redacted> suchen eine andere Arbeitsstelle.'
 
 # It is also possible to change the redaction text
-tokens = ['Coca-Cola', 'Pepsi']
+text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
+tokens = ['Coca-Cola', 'Pepsi', 'John Smith']
 ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact
 # => '***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**. Please contact ***** at ***** or visit *****.'
 ```

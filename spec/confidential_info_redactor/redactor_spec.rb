@@ -148,5 +148,11 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
       text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
       expect(described_class.new(text: text, language: 'en', tokens: tokens, ignore_numbers: true).redact).to eq('<redacted> announced a merger with <redacted> that will happen on <redacted date> for $200,000,000,000. Please contact <redacted> at <redacted> or visit <redacted>.')
     end
+
+    it 'redacts all confidential information from a text #005' do
+      tokens = ['Coca-Cola', 'Pepsi', 'John Smith']
+      text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
+      expect(described_class.new(text: text, language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact).to eq('***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**. Please contact ***** at ***** or visit *****.')
+    end
   end
 end
