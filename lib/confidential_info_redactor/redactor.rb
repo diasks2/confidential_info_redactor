@@ -3,8 +3,8 @@ require 'confidential_info_redactor/date'
 module ConfidentialInfoRedactor
   # This class redacts various tokens from a text
   class Redactor
-    # Rubular: http://rubular.com/r/aGqvObk6SL
-    NUMBER_REGEX = /(?<=\A)\D?\d+((,|\.)*\d)*(\D?\s|\s|\.?\s|\.$)|(?<=\s)\D?\d+((,|\.)*\d)*(?=(\D?\s|\s|\.?\s|\.$))/
+    # Rubular: http://rubular.com/r/LRRPtDgJOe
+    NUMBER_REGEX = /(?<=\A|\A\()[^(]?\d+((,|\.)*\d)*(\D?\s|\s|\.?\s|\.$)|(?<=\s|\s\()[^(]?\d+((,|\.)*\d)*(?=(\D?\s|\s|\.?\s|\.$))|(?<=\s)\d+(nd|th|st)|(?<=\s)\d+\/\d+\"*(?=\s)/
     attr_reader :text, :language, :corpus, :number_text, :date_text, :token_text, :tokens
     def initialize(text:, **args)
       @text = text
@@ -46,7 +46,7 @@ module ConfidentialInfoRedactor
     end
 
     def redact_numbers(txt)
-      txt.gsub(NUMBER_REGEX, " #{number_text} ").gsub(/\s*#{Regexp.escape(number_text)}\s*/, " #{number_text} ").gsub(/\A\s*#{Regexp.escape(number_text)}\s*/, "#{number_text} ").gsub(/#{Regexp.escape(number_text)}\s{1}\.{1}/, "#{number_text}.")
+      txt.gsub(NUMBER_REGEX, " #{number_text} ").gsub(/\s*#{Regexp.escape(number_text)}\s*/, " #{number_text} ").gsub(/\A\s*#{Regexp.escape(number_text)}\s*/, "#{number_text} ").gsub(/#{Regexp.escape(number_text)}\s{1}\.{1}/, "#{number_text}.").gsub(/#{Regexp.escape(number_text)}\s{1}\,{1}/, "#{number_text},").gsub(/#{Regexp.escape(number_text)}\s{1}\){1}/, "#{number_text})").gsub(/\(\s{1}#{Regexp.escape(number_text)}/, "(#{number_text}")
     end
 
     def redact_tokens(txt)

@@ -33,6 +33,11 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
       text = '200 years ago.'
       expect(described_class.new(text: text, language: 'en').numbers).to eq('<redacted number> years ago.')
     end
+
+    it 'redacts numbers from a text #003' do
+      text = 'It was his 1st time, not yet his 10th, not even his 2nd. The wood was 3/4" thick.'
+      expect(described_class.new(text: text, language: 'en').numbers).to eq('It was his <redacted number> time, not yet his <redacted number>, not even his <redacted number>. The wood was <redacted number> thick.')
+    end
   end
 
   describe '#proper_nouns' do

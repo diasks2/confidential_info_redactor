@@ -86,7 +86,7 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
 
           Don’t forget to use your imagination and creativity!
         EOF
-        expect(described_class.new(text: text).extract).to eq([''])
+        expect(described_class.new(text: text).extract).to eq(["Putter King Miniature Golf Scavenger Hunt", "Putter King", "Annual Miniature Golf Scavenger Hunt", "The Official List", "Nostalgic Miniature Golf Obstacles", "Putter King Hole Design Contest", "Screenshot", "World Heritage Site", "PGA", "iTunes", "Gift Card", "Putter King Scavenger Hunt Trophy", "Engraved Crystal Trophy", "Picture Coming Soon", "The Putter King", "The U.S. Government", "Putter King Scavenger Hunt Submission", "YouTube", "Flickr", "Picasa", "Photobucket"])
       end
 
       it 'extracts the proper nouns from a text #007' do
