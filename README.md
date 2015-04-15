@@ -74,7 +74,7 @@ ConfidentialInfoRedactor::Redactor.new(text: text, language: 'de', tokens: token
 # It is also possible to change the redaction text
 tokens = ['Coca-Cola', 'Pepsi']
 ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact
-# => '***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**.'
+# => '***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**. Please contact ***** at ***** or visit *****.'
 ```
 
 #### Redactor class options
