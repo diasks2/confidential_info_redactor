@@ -42,7 +42,7 @@ module ConfidentialInfoRedactor
     private
 
     def redact_dates(txt)
-      ConfidentialInfoRedactor::Date.new(string: txt).replace.gsub(/\s*#{Regexp.escape(date_text)}\s*/, " #{date_text} ").gsub(/\A\s*#{Regexp.escape(date_text)}\s*/, "#{date_text} ").gsub(/#{Regexp.escape(date_text)}\s{1}\.{1}/, "#{date_text}.")
+      ConfidentialInfoRedactor::Date.new(string: txt, language: language).replace.gsub(/\s*#{Regexp.escape(date_text)}\s*/, " #{date_text} ").gsub(/\A\s*#{Regexp.escape(date_text)}\s*/, "#{date_text} ").gsub(/#{Regexp.escape(date_text)}\s{1}\.{1}/, "#{date_text}.")
     end
 
     def redact_numbers(txt)
