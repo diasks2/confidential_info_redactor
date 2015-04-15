@@ -20,9 +20,9 @@ module ConfidentialInfoRedactor
       new_string = string.dup
       string.split(/\s+/).each do |token|
         if !(token !~ URI.regexp) && token !~ NON_HYPERLINK_REGEX && !(token !~ HYPERLINK_REGEX) && token.include?('">')
-          new_string = new_string.gsub(/#{Regexp.escape(token.split('">')[0])}/, ' <redacted> ')
+          new_string = new_string.gsub(/#{Regexp.escape(token.split('">')[0].gsub(/\.\z/, ''))}/, ' <redacted> ')
         elsif !(token !~ URI.regexp) && token !~ NON_HYPERLINK_REGEX && !(token !~ HYPERLINK_REGEX)
-          new_string = new_string.gsub(/#{Regexp.escape(token)}/, ' <redacted> ')
+          new_string = new_string.gsub(/#{Regexp.escape(token.gsub(/\.\z/, ''))}/, ' <redacted> ')
         end
       end
       new_string

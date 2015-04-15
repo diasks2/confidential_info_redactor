@@ -8,11 +8,11 @@ It differs from typical NER as it makes no attempt to identify whether a token i
 
 Your use case may vary, but the gem was written to first extract potential sensitive tokens from a text and then show the user the extracted tokens and let the user decide which ones should be redacted (or add missing tokens to the list).
 
-The way the gem works is rather simple. It uses regular expressions to search for capitalized tokens (one token, two token, etc.) and then checks whether those tokens match a list of the common vocabulary for that language (e.g. the x most frequent words - the size of x depending on what is available for that language). If the token is not in the list of words for that language it is added to an array of tokens that should be checked by the user as potential "confidential information".
+The way the gem works is rather simple. It uses regular expressions to search for capitalized tokens (1-grams, 2-grams, 3-grams etc.) and then checks whether those tokens match a list of the common vocabulary for that language (e.g. the x most frequent words - the size of x depending on what is available for that language). If the token is not in the list of words for that language it is added to an array of tokens that should be checked by the user as potential "confidential information".
 
 In the sentence "Pepsi and Coca-Cola battled for position in the market." the gem would extract "Pepsi" and "Coca-Cola" as potential tokens to redact.
 
-In addition to searching for proper nouns, the gem also has the functionality to redact numbers and dates.
+In addition to searching for proper nouns, the gem also has the functionality to redact numbers, dates, emails and hyperlinks.
 
 ## Install  
 
@@ -34,22 +34,33 @@ gem 'confidential_info_redactor'
 * To specify a language use its two character [ISO 639-1 code](https://www.tm-town.com/languages).  
 
 ```ruby
-text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000.'
+text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
 tokens = ConfidentialInfoRedactor::Extractor.new(text: text).extract
-# => ['Coca-Cola', 'Pepsi']
+# => ["Coca-Cola", "Pepsi", "John Smith"]
 
 ConfidentialInfoRedactor::Redactor.new(text: text).dates
-# => 'Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000.'
+# => 'Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
 ConfidentialInfoRedactor::Redactor.new(text: text).numbers
-# => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for <redacted number>.'
+# => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for <redacted number>. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
+
+ConfidentialInfoRedactor::Redactor.new(text: text).emails
+# => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at <redacted> or visit http://www.super-fake-merger.com.'
+
+ConfidentialInfoRedactor::Redactor.new(text: text).hyperlinks
+# => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit <redacted>.'
 
 ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).proper_nouns
-# => '<redacted> announced a merger with <redacted> that will happen on December 15th, 2020 for $200,000,000,000.'
+# => '<redacted> announced a merger with <redacted> that will happen on December 15th, 2020 for $200,000,000,000. Please contact <redacted> at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
 ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).redact
-# => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>.'
+# => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>. Please contact <redacted> at <redacted> or visit <redacted>.'
+
+# It is possible to 'turn off' any of the specific redactors
+
+ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, ignore_numbers: true).redact
+# => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for $200,000,000,000. Please contact <redacted> at <redacted> or visit <redacted>.'
 
 # German Example
 text = 'Viele Mitarbeiter der Deutschen Bank suchen eine andere Arbeitsstelle.'

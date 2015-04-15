@@ -93,6 +93,11 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
         text = 'I learned that Apple has plans to release a new iPhone, iPad and iWatch.'
         expect(described_class.new(text: text, language: 'en').extract).to eq(['Apple', 'iPhone', 'iPad', 'iWatch'])
       end
+
+      it 'extracts the proper nouns from a text #008' do
+        text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
+        expect(described_class.new(text: text, language: 'en').extract).to eq(["Coca-Cola", "Pepsi", "John Smith"])
+      end
     end
 
     context 'German (de)' do

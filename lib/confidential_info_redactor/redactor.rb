@@ -9,7 +9,7 @@ module ConfidentialInfoRedactor
     EMAIL_REGEX = /(?<=\A|\s)[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+(?=\z|\s|\.)/i
 
 
-    attr_reader :text, :language, :corpus, :number_text, :date_text, :token_text, :tokens
+    attr_reader :text, :language, :corpus, :number_text, :date_text, :token_text, :tokens, :ignore_emails, :ignore_dates, :ignore_numbers, :ignore_hyperlinks
     def initialize(text:, **args)
       @text = text
       @language = args[:language] || 'en'
@@ -17,6 +17,10 @@ module ConfidentialInfoRedactor
       @number_text = args[:number_text] || '<redacted number>'
       @date_text = args[:date_text] || '<redacted date>'
       @token_text = args[:token_text] || '<redacted>'
+      @ignore_emails = args[:ignore_emails]
+      @ignore_dates = args[:ignore_dates]
+      @ignore_numbers = args[:ignore_numbers]
+      @ignore_hyperlinks = args[:ignore_hyperlinks]
       case @language
       when 'en'
         @corpus = ConfidentialInfoRedactor::WordLists::EN_WORDS
@@ -46,17 +50,21 @@ module ConfidentialInfoRedactor
     end
 
     def redact
-      redacted_text = redact_emails(text)
-      redacted_text = redact_hyperlinks(redacted_text)
-      redacted_text = redact_dates(redacted_text)
-      redacted_text = redact_numbers(redacted_text)
+      if ignore_emails
+        redacted_text = text
+      else
+        redacted_text = redact_emails(text)
+      end
+      redacted_text = redact_hyperlinks(redacted_text) unless ignore_hyperlinks
+      redacted_text = redact_dates(redacted_text) unless ignore_dates
+      redacted_text = redact_numbers(redacted_text) unless ignore_numbers
       redact_tokens(redacted_text)
     end
 
     private
 
     def redact_hyperlinks(txt)
-      ConfidentialInfoRedactor::Hyperlink.new(string: txt).replace.gsub(/<redacted>/, "#{token_text}").gsub(/\s*#{Regexp.escape(token_text)}\s*/, " #{token_text} ")
+      ConfidentialInfoRedactor::Hyperlink.new(string: txt).replace.gsub(/<redacted>/, "#{token_text}").gsub(/\s*#{Regexp.escape(token_text)}\s*/, " #{token_text} ").gsub(/#{Regexp.escape(token_text)}\s{1}\.{1}/, "#{token_text}.").gsub(/#{Regexp.escape(token_text)}\s{1}\,{1}/, "#{token_text},")
     end
 
     def redact_dates(txt)
