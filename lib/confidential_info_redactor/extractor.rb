@@ -4,8 +4,7 @@ module ConfidentialInfoRedactor
   # This class extracts proper nouns from a text
   class Extractor
     # Rubular: http://rubular.com/r/qE0g4r9zR7
-    # EXTRACT_REGEX = /(?<=\s|^|\s\")([A-Z]\S*\s)*[A-Z]\S*(?=(\s|\.))/
-    EXTRACT_REGEX = /(?<=\s|^|\s\")([A-Z]\S*\s)*[A-Z]\S*(?=(\s|\.))|(?<=\s|^|\s\")[i][A-Z][a-z]+/
+    EXTRACT_REGEX = /(?<=\s|^|\s\")([A-Z]\S*\s)*[A-Z]\S*(?=(\s|\.|\z))|(?<=\s|^|\s\")[i][A-Z][a-z]+/
     attr_reader :text, :language, :corpus
     def initialize(text:, **args)
       @text = text.gsub(/[’‘]/, "'")
@@ -24,7 +23,7 @@ module ConfidentialInfoRedactor
         initial_extracted_terms = segment.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '')) }.compact
         initial_extracted_terms.each do |ngram|
           ngram.split(/[\?\)\(\!\\\/\"\:\;\,]/).each do |t|
-            extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').strip)
+            extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').strip)
           end
         end
       end
@@ -33,9 +32,9 @@ module ConfidentialInfoRedactor
         extracted_terms.delete_if do |token|
           corpus.include?(token.split(' ')[0].downcase.strip) &&
             token.split(' ')[0].downcase.strip != 'deutsche'
-        end.uniq
+        end.uniq.reject(&:empty?)
       else
-        extracted_terms.uniq
+        extracted_terms.uniq.reject(&:empty?)
       end
     end
   end
