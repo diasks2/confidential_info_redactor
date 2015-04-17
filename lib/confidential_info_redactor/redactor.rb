@@ -6,8 +6,8 @@ module ConfidentialInfoRedactor
   class Redactor
     # Rubular: http://rubular.com/r/LRRPtDgJOe
     NUMBER_REGEX = /(?<=\A|\A\()[^(]?\d+((,|\.)*\d)*(\D?\s|\s|\.?\s|\.$)|(?<=\s|\s\()[^(]?\d+((,|\.)*\d)*(?=(\D?\s|\s|\.?\s|\.$))|(?<=\s)\d+(nd|th|st)|(?<=\s)\d+\/\d+\"*(?=\s)/
-    EMAIL_REGEX = /(?<=\A|\s)[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+(?=\z|\s|\.)/i
-
+    # Rubular: http://rubular.com/r/mxcj2G0Jfa
+    EMAIL_REGEX = /(?<=\A|\s|\()[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+(?=\z|\s|\.|\))/i
 
     attr_reader :text, :language, :number_text, :date_text, :token_text, :tokens, :ignore_emails, :ignore_dates, :ignore_numbers, :ignore_hyperlinks
     def initialize(text:, **args)

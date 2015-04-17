@@ -45,6 +45,11 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
       text = 'His email is john@gmail.com or you can try k.light@tuv.eu.us.'
       expect(described_class.new(text: text, language: 'en').emails).to eq('His email is <redacted> or you can try <redacted>.')
     end
+
+    it 'redacts email addresses from a text #002' do
+      text = 'His email is (john@gmail.com) or you can try (k.light@tuv.eu.us).'
+      expect(described_class.new(text: text, language: 'en').emails).to eq('His email is (<redacted>) or you can try (<redacted>).')
+    end
   end
 
   describe '#hyperlinks' do
