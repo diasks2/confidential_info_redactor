@@ -25,19 +25,16 @@ module ConfidentialInfoRedactor
         initial_extracted_terms = segment.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '')) }.compact
         initial_extracted_terms.each do |ngram|
           ngram.split(/[\?\)\(\!\\\/\"\:\;\,]/).each do |t|
-            extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').strip)
+            if corpus.include?(t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip.split(' ')[0]) && t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip.split(' ')[0] != 'the' && t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip.split(' ')[0] != 'deutsche' && t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip.split(' ').length.eql?(2)
+              extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip.split(' ')[1] unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').strip.split(' ')[1])
+            else
+              extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').strip)
+            end
           end
         end
       end
 
-      if language.eql?('de')
-        extracted_terms.delete_if do |token|
-          corpus.include?(token.split(' ')[0].downcase.strip) &&
-            token.split(' ')[0].downcase.strip != 'deutsche'
-        end.uniq.reject(&:empty?)
-      else
-        extracted_terms.uniq.reject(&:empty?)
-      end
+      extracted_terms.uniq.reject(&:empty?)
     end
   end
 end

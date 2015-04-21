@@ -86,7 +86,7 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
 
           Don’t forget to use your imagination and creativity!
         EOF
-        expect(described_class.new(text: text).extract).to eq(["Putter King Miniature Golf Scavenger Hunt", "Putter King", "Annual Miniature Golf Scavenger Hunt", "The Official List", "Nostalgic Miniature Golf Obstacles", "Putter King Hole Design Contest", "World Heritage Site", "PGA", "iTunes", "Gift Card", "Putter King Scavenger Hunt Trophy", "Engraved Crystal Trophy", "Picture Coming Soon", "The Putter King", "The U.S. Government", "Putter King Scavenger Hunt Submission", "YouTube", "Flickr", "Picasa", "Photobucket"])
+        expect(described_class.new(text: text).extract).to eq(["Putter King Miniature Golf Scavenger Hunt", "Annual Miniature Golf Scavenger Hunt", "The Official List", "Nostalgic Miniature Golf Obstacles", "Putter King Hole Design Contest", "World Heritage Site", "PGA", "iTunes", "Putter King Scavenger Hunt Trophy", "Engraved Crystal Trophy", "Picture Coming Soon", "The Putter King", "The U.S. Government", "Putter King Scavenger Hunt Submission", "YouTube", "Flickr", "Picasa", "Photobucket"])
       end
 
       it 'extracts the proper nouns from a text #007' do
@@ -97,6 +97,11 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
       it 'extracts the proper nouns from a text #008' do
         text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
         expect(described_class.new(text: text, language: 'en').extract).to eq(["Coca-Cola", "Pepsi", "John Smith"])
+      end
+
+      it 'extracts the proper nouns from a text #009' do
+        text = 'Then Peter went to the store.'
+        expect(described_class.new(text: text, language: 'en').extract).to eq(["Peter"])
       end
     end
 
