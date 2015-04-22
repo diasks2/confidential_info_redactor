@@ -38,6 +38,16 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
       text = 'It was his 1st time, not yet his 10th, not even his 2nd. The wood was 3/4" thick.'
       expect(described_class.new(text: text, language: 'en').numbers).to eq('It was his <redacted number> time, not yet his <redacted number>, not even his <redacted number>. The wood was <redacted number> thick.')
     end
+
+    it 'redacts numbers from a text #004' do
+      text = 'Checking file of %2'
+      expect(described_class.new(text: text, language: 'en').numbers).to eq('Checking file of <redacted number>')
+    end
+
+    it 'redacts numbers from a text #005' do
+      text = 'zawiera pliki skompresowane (%2).'
+      expect(described_class.new(text: text, language: 'en').numbers).to eq('zawiera pliki skompresowane (<redacted number>).')
+    end
   end
 
   describe '#emails' do
