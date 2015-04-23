@@ -86,7 +86,7 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
 
           Don’t forget to use your imagination and creativity!
         EOF
-        expect(described_class.new(text: text).extract).to eq(["Putter King Miniature Golf Scavenger Hunt", "Annual Miniature Golf Scavenger Hunt", "The Official List", "Nostalgic Miniature Golf Obstacles", "Putter King Hole Design Contest", "World Heritage Site", "PGA", "iTunes", "Putter King Scavenger Hunt Trophy", "Engraved Crystal Trophy", "Picture Coming Soon", "The Putter King", "The U.S. Government", "Putter King Scavenger Hunt Submission", "YouTube", "Flickr", "Picasa", "Photobucket"])
+        expect(described_class.new(text: text).extract).to eq(["PGA", "iTunes", "YouTube", "Flickr", "Picasa", "Photobucket"])
       end
 
       it 'extracts the proper nouns from a text #007' do
@@ -102,6 +102,21 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
       it 'extracts the proper nouns from a text #009' do
         text = 'Then Peter went to the store.'
         expect(described_class.new(text: text, language: 'en').extract).to eq(["Peter"])
+      end
+
+      it 'extracts the proper nouns from a text #010' do
+        text = 'HOW TO COOK VEGETABLES'
+        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+      end
+
+      it 'extracts the proper nouns from a text #011' do
+        text = 'All Natural Peanut Butter'
+        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+      end
+
+      it 'extracts the proper nouns from a text #012' do
+        text = 'GOOD CARBS VS. BAD CARBS'
+        expect(described_class.new(text: text, language: 'en').extract).to eq([])
       end
     end
 
