@@ -175,5 +175,11 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
       text = 'LEGAL DISCLAIMER - CLA will not be held reponsible for changes.'
       expect(described_class.new(text: text, language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact).to eq("LEGAL DISCLAIMER - ***** will not be held reponsible for changes.")
     end
+
+    it 'redacts all confidential information from a text #007' do
+      tokens = ['Trans']
+      text = 'My Transformation - avoid Trans.'
+      expect(described_class.new(text: text, language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****', hyperlink_text: '*****', email_text: '*****').redact).to eq('My Transformation - avoid *****.')
+    end
   end
 end
