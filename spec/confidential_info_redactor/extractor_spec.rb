@@ -118,6 +118,21 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
         text = 'GOOD CARBS VS. BAD CARBS'
         expect(described_class.new(text: text, language: 'en').extract).to eq([])
       end
+
+      it 'extracts the proper nouns from a text #013' do
+        text = 'Reducing”'
+        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+      end
+
+      it 'extracts the proper nouns from a text #014' do
+        text = '”'
+        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+      end
+
+      it 'extracts the proper nouns from a text #015' do
+        text = '“Reducing'
+        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+      end
     end
 
     context 'German (de)' do
