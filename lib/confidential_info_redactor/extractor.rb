@@ -34,7 +34,7 @@ module ConfidentialInfoRedactor
                   tracker = false if corpus.include?(token.downcase)
                 end
               end
-              extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip) || !tracker
+              extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip) || !tracker || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-2]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-2..-1].eql?('en')) || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-2]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-2..-1].eql?('es')) || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-2]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-2..-1].eql?('er')) || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-1]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-1].eql?('s'))
             end
           end
         end
