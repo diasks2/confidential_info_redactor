@@ -141,7 +141,7 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
 
       it 'extracts the proper nouns from a text #017' do
         text = 'John'
-        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+        expect(described_class.new(text: text, language: 'en').extract).to eq(['John'])
       end
     end
 
