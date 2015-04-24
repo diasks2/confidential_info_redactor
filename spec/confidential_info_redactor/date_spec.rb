@@ -260,6 +260,12 @@ RSpec.describe ConfidentialInfoRedactor::Date do
         ws = ConfidentialInfoRedactor::Date.new(string: string, language: 'de')
         expect(ws.replace).to eq(' <redacted date> ')
       end
+
+      it 'replaces the date occurences in a string #002' do
+        string = 'Oktober de 15'
+        ws = ConfidentialInfoRedactor::Date.new(string: string, language: 'de')
+        expect(ws.replace).to eq(' <redacted date> ')
+      end
     end
   end
 
