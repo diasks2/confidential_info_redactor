@@ -23,6 +23,7 @@ module ConfidentialInfoRedactor
       extracted_terms = []
       PragmaticSegmenter::Segmenter.new(text: text, language: language).segment.each do |segment|
         initial_extracted_terms = segment.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '')) }.compact
+        next if initial_extracted_terms.length.eql?(segment.split(' ').length)
         initial_extracted_terms.each do |ngram|
           ngram.split(/[\?\)\(\!\\\/\"\:\;\,]/).each do |t|
             next if !(t !~ /.*\d+.*/)

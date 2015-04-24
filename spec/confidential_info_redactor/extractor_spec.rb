@@ -138,6 +138,11 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
         text = 'Corrigendum to Council Regulation (EC) No 85/2009 of 19 January 2009 amending Regulation (EC) No 1083/2006 laying down general provisions on the European Regional Development Fund, the European Social Fund and the Cohesion Fund concerning certain provisions relating to financial management'
         expect(described_class.new(text: text, language: 'en').extract).to eq(["Corrigendum"])
       end
+
+      it 'extracts the proper nouns from a text #017' do
+        text = 'John'
+        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+      end
     end
 
     context 'German (de)' do
