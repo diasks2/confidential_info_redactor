@@ -5,27 +5,27 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
     context 'English (en)' do
       it 'extracts the proper nouns from a text #001' do
         text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(['Coca-Cola', 'Pepsi'])
+        expect(described_class.new(language: 'en').extract(text)).to eq(['Coca-Cola', 'Pepsi'])
       end
 
       it 'extracts the proper nouns from a text #002' do
         text = 'Coca-Cola announced a merger with Pepsi.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(['Coca-Cola', 'Pepsi'])
+        expect(described_class.new(language: 'en').extract(text)).to eq(['Coca-Cola', 'Pepsi'])
       end
 
       it 'extracts the proper nouns from a text #003' do
         text = 'Many employees of Deutsche Bank are looking for another job.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(['Deutsche Bank'])
+        expect(described_class.new(language: 'en').extract(text)).to eq(['Deutsche Bank'])
       end
 
       it 'extracts the proper nouns from a text #004' do
         text = 'Many employees of Deutsche Bank are looking for another job while those from Pepsi are not.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(['Deutsche Bank', 'Pepsi'])
+        expect(described_class.new(language: 'en').extract(text)).to eq(['Deutsche Bank', 'Pepsi'])
       end
 
       it 'extracts the proper nouns from a text #005' do
         text = 'There are many employees at Deutsche Bank. Some are thinking about drinking Pepsi, Coke, or Sprite.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(['Deutsche Bank', 'Pepsi', 'Coke', 'Sprite'])
+        expect(described_class.new(language: 'en').extract(text)).to eq(['Deutsche Bank', 'Pepsi', 'Coke', 'Sprite'])
       end
 
       it 'extracts the proper nouns from a text #006' do
@@ -86,79 +86,79 @@ RSpec.describe ConfidentialInfoRedactor::Extractor do
 
           Don’t forget to use your imagination and creativity!
         EOF
-        expect(described_class.new(text: text).extract).to eq(["PGA", "iTunes", "YouTube", "Flickr", "Picasa", "Photobucket"])
+        expect(described_class.new(text: text).extract(text)).to eq(["PGA", "iTunes", "YouTube", "Flickr", "Picasa", "Photobucket"])
       end
 
       it 'extracts the proper nouns from a text #007' do
         text = 'I learned that Apple has plans to release a new iPhone, iPad and iWatch.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(['Apple', 'iPhone', 'iPad', 'iWatch'])
+        expect(described_class.new(language: 'en').extract(text)).to eq(['Apple', 'iPhone', 'iPad', 'iWatch'])
       end
 
       it 'extracts the proper nouns from a text #008' do
         text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(["Coca-Cola", "Pepsi", "John Smith"])
+        expect(described_class.new(language: 'en').extract(text)).to eq(["Coca-Cola", "Pepsi", "John Smith"])
       end
 
       it 'extracts the proper nouns from a text #009' do
         text = 'Then Peter went to the store.'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(["Peter"])
+        expect(described_class.new(language: 'en').extract(text)).to eq(["Peter"])
       end
 
       it 'extracts the proper nouns from a text #010' do
         text = 'HOW TO COOK VEGETABLES'
-        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+        expect(described_class.new(language: 'en').extract(text)).to eq([])
       end
 
       it 'extracts the proper nouns from a text #011' do
         text = 'All Natural Peanut Butter'
-        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+        expect(described_class.new(language: 'en').extract(text)).to eq([])
       end
 
       it 'extracts the proper nouns from a text #012' do
         text = 'GOOD CARBS VS. BAD CARBS'
-        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+        expect(described_class.new(language: 'en').extract(text)).to eq([])
       end
 
       it 'extracts the proper nouns from a text #013' do
         text = 'Reducing”'
-        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+        expect(described_class.new(language: 'en').extract(text)).to eq([])
       end
 
       it 'extracts the proper nouns from a text #014' do
         text = '”'
-        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+        expect(described_class.new(language: 'en').extract(text)).to eq([])
       end
 
       it 'extracts the proper nouns from a text #015' do
         text = '“Reducing'
-        expect(described_class.new(text: text, language: 'en').extract).to eq([])
+        expect(described_class.new(language: 'en').extract(text)).to eq([])
       end
 
       it 'extracts the proper nouns from a text #016' do
         text = 'Corrigendum to Council Regulation (EC) No 85/2009 of 19 January 2009 amending Regulation (EC) No 1083/2006 laying down general provisions on the European Regional Development Fund, the European Social Fund and the Cohesion Fund concerning certain provisions relating to financial management'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(["Corrigendum"])
+        expect(described_class.new(language: 'en').extract(text)).to eq(["Corrigendum"])
       end
 
       it 'extracts the proper nouns from a text #017' do
         text = 'John'
-        expect(described_class.new(text: text, language: 'en').extract).to eq(['John'])
+        expect(described_class.new(language: 'en').extract(text)).to eq(['John'])
       end
     end
 
     context 'German (de)' do
       it 'extracts the proper nouns from a text #001' do
         text = 'Viele Mitarbeiter der Deutschen Bank suchen eine andere Arbeitsstelle.'
-        expect(described_class.new(text: text, language: 'de').extract).to eq(['Deutschen Bank'])
+        expect(described_class.new(language: 'de').extract(text)).to eq(['Deutschen Bank'])
       end
 
       it 'extracts the proper nouns from a text #002' do
         text = 'Viele Mitarbeiter der Deutsche Bank suchen eine andere Arbeitsstelle.'
-        expect(described_class.new(text: text, language: 'de').extract).to eq(['Deutsche Bank'])
+        expect(described_class.new(language: 'de').extract(text)).to eq(['Deutsche Bank'])
       end
 
       it 'extracts the proper nouns from a text #003' do
         text = 'Ich behielt diese Routine während und sogar während des Studiums an der Uni bei, und ich war damals froh, wenn ich pro Tag zwei ganze Mahlzeiten zu mir nahm.'
-        expect(described_class.new(text: text, language: 'de').extract).to eq([])
+        expect(described_class.new(language: 'de').extract(text)).to eq([])
       end
     end
   end

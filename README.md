@@ -40,45 +40,45 @@ gem 'confidential_info_redactor'
 ```ruby
 text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
-tokens = ConfidentialInfoRedactor::Extractor.new(text: text).extract
+tokens = ConfidentialInfoRedactor::Extractor.new.extract(text)
 # => ["Coca-Cola", "Pepsi", "John Smith"]
 
-ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).redact
+ConfidentialInfoRedactor::Redactor.new(tokens: tokens).redact(text)
 # => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>. Please contact <redacted> at <redacted> or visit <redacted>.'
 
 # You can also just use a specific redactor
-ConfidentialInfoRedactor::Redactor.new(text: text).dates
+ConfidentialInfoRedactor::Redactor.new.dates(text)
 # => 'Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
-ConfidentialInfoRedactor::Redactor.new(text: text).numbers
+ConfidentialInfoRedactor::Redactor.new.numbers(text)
 # => 'Coca-Cola announced a merger with Pepsi that will happen on December <redacted number>, <redacted number> for <redacted number>. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
-ConfidentialInfoRedactor::Redactor.new(text: text).emails
+ConfidentialInfoRedactor::Redactor.new.emails(text)
 # => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at <redacted> or visit http://www.super-fake-merger.com.'
 
-ConfidentialInfoRedactor::Redactor.new(text: text).hyperlinks
+ConfidentialInfoRedactor::Redactor.new.hyperlinks(text)
 # => 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit <redacted>.'
 
-ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens).proper_nouns
+ConfidentialInfoRedactor::Redactor.new(tokens: tokens).proper_nouns(text)
 # => '<redacted> announced a merger with <redacted> that will happen on December 15th, 2020 for $200,000,000,000. Please contact <redacted> at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
 # It is possible to 'turn off' any of the specific redactors
-ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, ignore_numbers: true).redact
+ConfidentialInfoRedactor::Redactor.new(tokens: tokens, ignore_numbers: true).redact(text)
 # => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for $200,000,000,000. Please contact <redacted> at <redacted> or visit <redacted>.'
 
 # German Example
 text = 'Viele Mitarbeiter der Deutschen Bank suchen eine andere Arbeitsstelle.'
 
-tokens = ConfidentialInfoRedactor::Extractor.new(text: text, language: 'de').extract
+tokens = ConfidentialInfoRedactor::Extractor.new(language: 'de').extract(text)
 # => ['Deutschen Bank']
 
-ConfidentialInfoRedactor::Redactor.new(text: text, language: 'de', tokens: tokens).redact
+ConfidentialInfoRedactor::Redactor.new(language: 'de', tokens: tokens).redact(text)
 # => 'Viele Mitarbeiter der <redacted> suchen eine andere Arbeitsstelle.'
 
 # It is also possible to change the redaction text
 text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
 tokens = ['Coca-Cola', 'Pepsi', 'John Smith']
-ConfidentialInfoRedactor::Redactor.new(text: text, tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact
+ConfidentialInfoRedactor::Redactor.new(tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact(text)
 # => '***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**. Please contact ***** at ***** or visit *****.'
 ```
 

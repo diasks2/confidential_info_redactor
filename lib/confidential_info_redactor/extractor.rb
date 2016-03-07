@@ -4,10 +4,12 @@ module ConfidentialInfoRedactor
   # This class extracts proper nouns from a text
   class Extractor
     # Rubular: http://rubular.com/r/qE0g4r9zR7
-    EXTRACT_REGEX = /(?<=\s|^|\s\")([A-Z]\S*\s)*[A-Z]\S*(?=(\s|\.|\z))|(?<=\s|^|\s\")[i][A-Z][a-z]+/
-    attr_reader :text, :language, :corpus
-    def initialize(text:, **args)
-      @text = text.gsub(/[’‘]/, "'")
+    EXTRACT_REGEX = /(?<=\s|^|\s\"|\s\“|\s\«|\s\‹|\s\”|\s\»|\s\›)([A-Z]\S*\s)*[A-Z]\S*(?=(\s|\.|\z))|(?<=\s|^|\s\"|\s\”|\s\»|\s\›|\s\“|\s\«|\s\‹)[i][A-Z][a-z]+/
+
+    PUNCTUATION_REGEX = /[\?\)\(\!\\\/\"\:\;\,\”\“\«\»\‹\›]/
+
+    attr_reader :language, :corpus
+    def initialize(**args)
       @language = args[:language] || 'en'
       case @language
       when 'en'
@@ -19,38 +21,69 @@ module ConfidentialInfoRedactor
       end
     end
 
-    def extract
+    def extract(text)
       extracted_terms = []
-      PragmaticSegmenter::Segmenter.new(text: text, language: language).segment.each do |segment|
-        initial_extracted_terms = segment.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '')) }.compact
-        in_corpus = true
-        initial_extracted_terms.each do |ngram|
-          ngram.split(/[\?\)\(\!\\\/\"\:\;\,]/).each do |t|
-            unless corpus.include?(t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip)
-              in_corpus = false
-            end
-          end
-        end
-        next if initial_extracted_terms.length.eql?(segment.split(' ').length) && in_corpus
-        initial_extracted_terms.each do |ngram|
-          ngram.split(/[\?\)\(\!\\\/\"\:\;\,]/).each do |t|
-            next if !(t !~ /.*\d+.*/)
-            if corpus.include?(t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip.split(' ')[0]) && t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip.split(' ')[0] != 'the' && t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip.split(' ')[0] != 'deutsche' && t.downcase.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip.split(' ').length.eql?(2)
-              extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip.split(' ')[1] unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/\'$/, '').gsub(/”/,'').strip.split(' ')[1])
-            else
-              tracker = true
-              unless t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip.split(' ').length.eql?(2) && t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip.split(' ')[1].downcase.eql?('bank')
-                t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip.split(' ').each do |token|
-                  tracker = false if corpus.include?(token.downcase)
-                end
-              end
-              extracted_terms << t.gsub(/[\?\)\(\!\\\/\"\:\;\,]/, '').gsub(/\'$/, '').gsub(/”/,'').gsub(/\.\z/, '').strip unless corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip) || !tracker || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-2]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-2..-1].eql?('en')) || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-2]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-2..-1].eql?('es')) || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-2]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-2..-1].eql?('er')) || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-1]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-1].eql?('s')) || (corpus.include?(t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[0...-1]) && t.downcase.gsub(/[\?\.\)\(\!\\\/\"\:\;]/, '').gsub(/”/,'').gsub(/\'$/, '').strip[-1].eql?('n'))
-            end
-          end
+      PragmaticSegmenter::Segmenter.new(text: text.gsub(/[’‘]/, "'"), language: language).segment.each do |segment|
+        initial_extracted_terms = extract_preliminary_terms(segment)
+        search_ngrams(initial_extracted_terms, extracted_terms)
+      end
+      extracted_terms.map { |t| t.gsub(/\{\}/, '') }.delete_if { |t| t.length == 1 }.uniq.reject(&:empty?)
+    end
+
+    private
+
+    def extract_preliminary_terms(segment)
+      segment.to_s.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(PUNCTUATION_REGEX, '').gsub(/\'$/, '')) }.compact
+    end
+
+    def clean_token(token)
+      token.gsub(PUNCTUATION_REGEX, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip
+    end
+
+    def non_confidential_token?(token, includes_confidential)
+      corpus.include?(token) || !includes_confidential || singular_in_corpus?(token)
+    end
+
+    def singular_in_corpus?(token)
+      corpus.include?(token[0...-1]) &&
+        token[-1].eql?('s') ||
+        corpus.include?(token[0...-2]) && token[-2..-1].eql?('en') ||
+        corpus.include?(token[0...-2]) && token[-2..-1].eql?('es') ||
+        corpus.include?(token[0...-2]) && token[-2..-1].eql?('er') ||
+        corpus.include?(token[0...-1]) && token[-1].eql?('n')
+    end
+
+    def includes_confidential?(token)
+      token.split(' ').map { |t| return false if corpus.include?(t.downcase) } unless token.split(' ').length.eql?(2) && token.split(' ')[1].downcase.eql?('bank')
+      true
+    end
+
+    def matching_first_token?(tokens)
+      corpus.include?(tokens[0]) &&
+        tokens[0] != 'the' &&
+        tokens[0] != 'deutsche' &&
+        tokens.length.eql?(2)
+    end
+
+    def find_extracted_terms(string, extracted_terms)
+      cleaned_token_downcased = clean_token(string.downcase)
+      cleaned_token = clean_token(string)
+      tokens = cleaned_token_downcased.split(' ')
+      if matching_first_token?(tokens)
+        extracted_terms << cleaned_token.split(' ')[1] unless corpus.include?(tokens[1])
+      else
+        extracted_terms << cleaned_token unless non_confidential_token?(cleaned_token_downcased, includes_confidential?(cleaned_token))
+      end
+      extracted_terms
+    end
+
+    def search_ngrams(tokens, extracted_terms)
+      tokens.each do |ngram|
+        ngram.split(PUNCTUATION_REGEX).each do |t|
+          next if !(t !~ /.*\d+.*/)
+          extracted_terms = find_extracted_terms(t, extracted_terms)
         end
       end
-
-      extracted_terms.uniq.reject(&:empty?)
     end
   end
 end

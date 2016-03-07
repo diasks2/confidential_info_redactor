@@ -4,68 +4,68 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
   describe '#dates' do
     it 'redacts dates from a text #001' do
       text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000.'
-      expect(described_class.new(text: text, language: 'en').dates).to eq('Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000.')
+      expect(described_class.new(language: 'en').dates(text)).to eq('Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000.')
     end
 
     it 'redacts dates from a text #002' do
       text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020.'
-      expect(described_class.new(text: text, language: 'en').dates).to eq('Coca-Cola announced a merger with Pepsi that will happen on <redacted date>.')
+      expect(described_class.new(language: 'en').dates(text)).to eq('Coca-Cola announced a merger with Pepsi that will happen on <redacted date>.')
     end
 
     it 'redacts dates from a text #003' do
       text = 'December 5, 2010 - Coca-Cola announced a merger with Pepsi.'
-      expect(described_class.new(text: text, language: 'en').dates).to eq('<redacted date> - Coca-Cola announced a merger with Pepsi.')
+      expect(described_class.new(language: 'en').dates(text)).to eq('<redacted date> - Coca-Cola announced a merger with Pepsi.')
     end
 
     it 'redacts dates from a text #004' do
       text = 'The scavenger hunt ends on Dec. 31st, 2011.'
-      expect(described_class.new(text: text, language: 'en').dates).to eq('The scavenger hunt ends on <redacted date>.')
+      expect(described_class.new(language: 'en').dates(text)).to eq('The scavenger hunt ends on <redacted date>.')
     end
   end
 
   describe '#numbers' do
     it 'redacts numbers from a text #001' do
       text = 'Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for $200,000,000,000.'
-      expect(described_class.new(text: text, language: 'en').numbers).to eq('Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for <redacted number>.')
+      expect(described_class.new(language: 'en').numbers(text)).to eq('Coca-Cola announced a merger with Pepsi that will happen on <redacted date> for <redacted number>.')
     end
 
     it 'redacts numbers from a text #002' do
       text = '200 years ago.'
-      expect(described_class.new(text: text, language: 'en').numbers).to eq('<redacted number> years ago.')
+      expect(described_class.new(language: 'en').numbers(text)).to eq('<redacted number> years ago.')
     end
 
     it 'redacts numbers from a text #003' do
       text = 'It was his 1st time, not yet his 10th, not even his 2nd. The wood was 3/4" thick.'
-      expect(described_class.new(text: text, language: 'en').numbers).to eq('It was his <redacted number> time, not yet his <redacted number>, not even his <redacted number>. The wood was <redacted number> thick.')
+      expect(described_class.new(language: 'en').numbers(text)).to eq('It was his <redacted number> time, not yet his <redacted number>, not even his <redacted number>. The wood was <redacted number> thick.')
     end
 
     it 'redacts numbers from a text #004' do
       text = 'Checking file of %2'
-      expect(described_class.new(text: text, language: 'en').numbers).to eq('Checking file of <redacted number>')
+      expect(described_class.new(language: 'en').numbers(text)).to eq('Checking file of <redacted number>')
     end
 
     it 'redacts numbers from a text #005' do
       text = 'zawiera pliki skompresowane (%2).'
-      expect(described_class.new(text: text, language: 'en').numbers).to eq('zawiera pliki skompresowane (<redacted number>).')
+      expect(described_class.new(language: 'en').numbers(text)).to eq('zawiera pliki skompresowane (<redacted number>).')
     end
   end
 
   describe '#emails' do
     it 'redacts email addresses from a text #001' do
       text = 'His email is john@gmail.com or you can try k.light@tuv.eu.us.'
-      expect(described_class.new(text: text, language: 'en').emails).to eq('His email is <redacted> or you can try <redacted>.')
+      expect(described_class.new(language: 'en').emails(text)).to eq('His email is <redacted> or you can try <redacted>.')
     end
 
     it 'redacts email addresses from a text #002' do
       text = 'His email is (john@gmail.com) or you can try (k.light@tuv.eu.us).'
-      expect(described_class.new(text: text, language: 'en').emails).to eq('His email is (<redacted>) or you can try (<redacted>).')
+      expect(described_class.new(language: 'en').emails(text)).to eq('His email is (<redacted>) or you can try (<redacted>).')
     end
   end
 
   describe '#hyperlinks' do
     it 'redacts hyperlinks from a text #001' do
       text = 'Visit https://www.tm-town.com for more info.'
-      expect(described_class.new(text: text, language: 'en').hyperlinks).to eq('Visit <redacted> for more info.')
+      expect(described_class.new(language: 'en').hyperlinks(text)).to eq('Visit <redacted> for more info.')
     end
   end
 
@@ -73,13 +73,13 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
     it 'redacts tokens from a text #001' do
       tokens = ['Coca-Cola', 'Pepsi']
       text = 'Coca-Cola announced a merger with Pepsi that will happen on on December 15th, 2020 for $200,000,000,000.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens).proper_nouns).to eq('<redacted> announced a merger with <redacted> that will happen on on December 15th, 2020 for $200,000,000,000.')
+      expect(described_class.new(language: 'en', tokens: tokens).proper_nouns(text)).to eq('<redacted> announced a merger with <redacted> that will happen on on December 15th, 2020 for $200,000,000,000.')
     end
 
     it 'redacts tokens from a text #002' do
       tokens = ['Coca-Cola', 'Pepsi']
       text = 'Coca-Cola announced a merger with Pepsi that will happen on on December 15th, 2020 for $200,000,000,000.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens, token_text: '*****').proper_nouns).to eq('***** announced a merger with ***** that will happen on on December 15th, 2020 for $200,000,000,000.')
+      expect(described_class.new(language: 'en', tokens: tokens, token_text: '*****').proper_nouns(text)).to eq('***** announced a merger with ***** that will happen on on December 15th, 2020 for $200,000,000,000.')
     end
   end
 
@@ -87,7 +87,7 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
     it 'redacts all confidential information from a text #001' do
       tokens = ['Coca-Cola', 'Pepsi']
       text = 'Coca-Cola announced a merger with Pepsi that will happen on on December 15th, 2020 for $200,000,000,000.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens).redact).to eq('<redacted> announced a merger with <redacted> that will happen on on <redacted date> for <redacted number>.')
+      expect(described_class.new(language: 'en', tokens: tokens).redact(text)).to eq('<redacted> announced a merger with <redacted> that will happen on on <redacted date> for <redacted number>.')
     end
 
     it 'redacts all confidential information from a text #002' do
@@ -148,38 +148,38 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
 
         Don’t forget to use your imagination and creativity!
       EOF
-      tokens = ConfidentialInfoRedactor::Extractor.new(text: text).extract
-      expect(described_class.new(text: text, language: 'en', tokens: tokens).redact).to eq("        Putter King Miniature Golf Scavenger Hunt\n\n        Putter King is hosting the <redacted number> Annual Miniature Golf Scavenger Hunt.  So get out your putter and your camera and see if you have what it takes.  Are you a King?\n\n        The Official List: <redacted number>) Autographs of <redacted number> professional miniature golfers, each from a different country. (<redacted number> points; <redacted number> bonus points if the professional miniature golfers are also from <redacted number> different continents) <redacted number>) Picture of yourself next to each obstacle in our list of the Top <redacted number> Nostalgic Miniature Golf Obstacles. (<redacted number> points; <redacted number> bonus points for each obstacle that exactly matches the one pictured in the article) <redacted number>) Build your own full-size miniature golf hole. (<redacted number> points; up to <redacted number> bonus points available depending on the craftsmanship, playability, creativity and fun factor of your hole) <redacted number>) Video of yourself making a hole-in-one on two consecutive miniature golf holes. The video must be one continuous shot with no editing. (<redacted number> points) <redacted number>) Picture of yourself with the Putter King mascot. (<redacted number> points; <redacted number> bonus points if you are wearing a Putter King t-shirt) <redacted number>) Picture of yourself with the completed Putter King wobblehead. (<redacted number> points; <redacted number> bonus points if the picture is taken at a miniature golf course) <redacted number>) Picture of a completed scorecard from a round of miniature golf. The round of golf must have taken place after the start of this scavenger hunt. (<redacted number> points) <redacted number>) Picture of completed scorecards from <redacted number> different miniature golf courses. Each round of golf must have taken place after the start of this scavenger hunt. (<redacted number> points) <redacted number>) Submit an entry to the <redacted number> Putter King Hole Design Contest. (<redacted number> points; <redacted number> bonus points if your entry gets more than <redacted number> votes) <redacted number>) Screenshot from the Putter King app showing a 9-hole score below par. (<redacted number> points) <redacted number>) Screenshot from the Putter King app showing that you have successfully unlocked all of the holes in the game. (<redacted number> points) <redacted number>) Picture of the Putter King wobblehead at a World Heritage Site. (<redacted number> points) <redacted number>) Complete and submit the Putter King ‘Practice Activity’ and ‘Final Project’ for any one of the Putter King math or physics lessons. (<redacted number> points; <redacted number> bonus points if you complete two lessons) <redacted number>) Picture of yourself with at least <redacted number> different colored miniature golf balls. (<redacted number> points; <redacted number> bonus points for each additional color {limit of <redacted number> bonus points}) <redacted number>) Picture of yourself with a famous golfer or miniature golfer. (<redacted number> points; <redacted number> bonus points if the golfer is on the <redacted> tour AND you are wearing a Putter King t-shirt in the picture) <redacted number>) Video of yourself making a hole-in-one on a miniature golf hole with a loop-de-loop obstacle. (<redacted number> points) <redacted number>) Video of yourself successfully making a trick miniature golf shot. (<redacted number> points; up to <redacted number> bonus points available depending on the difficulty and complexity of the trick shot)\n\n\n        Prizes: <redacted number> <redacted> Gift Card\n\n        Putter King Scavenger Hunt Trophy\n        (<redacted number>  <redacted number> Engraved Crystal Trophy - Picture Coming Soon)\n\n        The Putter King team will judge the scavenger hunt and all decisions will be final. The U.S. Government is sponsoring it. The scavenger hunt is open to anyone and everyone.  The scavenger hunt ends on <redacted date>.\n\n        To enter the scavenger hunt, send an email to info AT putterking DOT com with the subject line: \"Putter King Scavenger Hunt Submission\".  In the email please include links to the pictures and videos you are submitting.  You can utilize free photo and video hosting sites such as <redacted>, <redacted>, <redacted>, <redacted>, etc. for your submissions.\n\n        By entering the Putter King Miniature Golf Scavenger Hunt, you allow Putter King to use or link to any of the pictures or videos you submit for advertisements and promotions.\n\n        Don’t forget to use your imagination and creativity!\n")
+      tokens = ConfidentialInfoRedactor::Extractor.new.extract(text)
+      expect(described_class.new(language: 'en', tokens: tokens).redact(text)).to eq("Putter King Miniature Golf Scavenger Hunt\n\n        Putter King is hosting the <redacted number> Annual Miniature Golf Scavenger Hunt.  So get out your putter and your camera and see if you have what it takes.  Are you a King?\n\n        The Official List: <redacted number>) Autographs of <redacted number> professional miniature golfers, each from a different country. (<redacted number> points; <redacted number> bonus points if the professional miniature golfers are also from <redacted number> different continents) <redacted number>) Picture of yourself next to each obstacle in our list of the Top <redacted number> Nostalgic Miniature Golf Obstacles. (<redacted number> points; <redacted number> bonus points for each obstacle that exactly matches the one pictured in the article) <redacted number>) Build your own full-size miniature golf hole. (<redacted number> points; up to <redacted number> bonus points available depending on the craftsmanship, playability, creativity and fun factor of your hole) <redacted number>) Video of yourself making a hole-in-one on two consecutive miniature golf holes. The video must be one continuous shot with no editing. (<redacted number> points) <redacted number>) Picture of yourself with the Putter King mascot. (<redacted number> points; <redacted number> bonus points if you are wearing a Putter King t-shirt) <redacted number>) Picture of yourself with the completed Putter King wobblehead. (<redacted number> points; <redacted number> bonus points if the picture is taken at a miniature golf course) <redacted number>) Picture of a completed scorecard from a round of miniature golf. The round of golf must have taken place after the start of this scavenger hunt. (<redacted number> points) <redacted number>) Picture of completed scorecards from <redacted number> different miniature golf courses. Each round of golf must have taken place after the start of this scavenger hunt. (<redacted number> points) <redacted number>) Submit an entry to the <redacted number> Putter King Hole Design Contest. (<redacted number> points; <redacted number> bonus points if your entry gets more than <redacted number> votes) <redacted number>) Screenshot from the Putter King app showing a <redacted number> score below par. (<redacted number> points) <redacted number>) Screenshot from the Putter King app showing that you have successfully unlocked all of the holes in the game. (<redacted number> points) <redacted number>) Picture of the Putter King wobblehead at a World Heritage Site. (<redacted number> points) <redacted number>) Complete and submit the Putter King ‘Practice Activity’ and ‘Final Project’ for any one of the Putter King math or physics lessons. (<redacted number> points; <redacted number> bonus points if you complete two lessons) <redacted number>) Picture of yourself with at least <redacted number> different colored miniature golf balls. (<redacted number> points; <redacted number> bonus points for each additional color {limit of <redacted number> bonus points}) <redacted number>) Picture of yourself with a famous golfer or miniature golfer. (<redacted number> points; <redacted number> bonus points if the golfer is on the <redacted> tour AND you are wearing a Putter King t-shirt in the picture) <redacted number>) Video of yourself making a hole-in-one on a miniature golf hole with a loop-de-loop obstacle. (<redacted number> points) <redacted number>) Video of yourself successfully making a trick miniature golf shot. (<redacted number> points; up to <redacted number> bonus points available depending on the difficulty and complexity of the trick shot)\n\n\n        Prizes: <redacted number> <redacted> Gift Card\n\n        Putter King Scavenger Hunt Trophy\n        (<redacted number>  <redacted number> Engraved Crystal Trophy - Picture Coming Soon)\n\n        The Putter King team will judge the scavenger hunt and all decisions will be final. The U.S. Government is sponsoring it. The scavenger hunt is open to anyone and everyone.  The scavenger hunt ends on <redacted date>.\n\n        To enter the scavenger hunt, send an email to info AT putterking DOT com with the subject line: \"Putter King Scavenger Hunt Submission\".  In the email please include links to the pictures and videos you are submitting.  You can utilize free photo and video hosting sites such as <redacted>, <redacted>, <redacted>, <redacted>, etc. for your submissions.\n\n        By entering the Putter King Miniature Golf Scavenger Hunt, you allow Putter King to use or link to any of the pictures or videos you submit for advertisements and promotions.\n\n        Don’t forget to use your imagination and creativity!")
     end
 
     it 'redacts all confidential information from a text #003' do
       tokens = ['Coca-Cola', 'Pepsi', 'John Smith']
       text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens).redact).to eq('<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>. Please contact <redacted> at <redacted> or visit <redacted>.')
+      expect(described_class.new(language: 'en', tokens: tokens).redact(text)).to eq('<redacted> announced a merger with <redacted> that will happen on <redacted date> for <redacted number>. Please contact <redacted> at <redacted> or visit <redacted>.')
     end
 
     it 'redacts all confidential information from a text #004' do
       tokens = ['Coca-Cola', 'Pepsi', 'John Smith']
       text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens, ignore_numbers: true).redact).to eq('<redacted> announced a merger with <redacted> that will happen on <redacted date> for $200,000,000,000. Please contact <redacted> at <redacted> or visit <redacted>.')
+      expect(described_class.new(language: 'en', tokens: tokens, ignore_numbers: true).redact(text)).to eq('<redacted> announced a merger with <redacted> that will happen on <redacted date> for $200,000,000,000. Please contact <redacted> at <redacted> or visit <redacted>.')
     end
 
     it 'redacts all confidential information from a text #005' do
       tokens = ['Coca-Cola', 'Pepsi', 'John Smith']
       text = 'Coca-Cola announced a merger with Pepsi that will happen on December 15th, 2020 for $200,000,000,000. Please contact John Smith at j.smith@example.com or visit http://www.super-fake-merger.com.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact).to eq('***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**. Please contact ***** at ***** or visit *****.')
+      expect(described_class.new(language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact(text)).to eq('***** announced a merger with ***** that will happen on ^^redacted date^^ for **redacted number**. Please contact ***** at ***** or visit *****.')
     end
 
     it 'redacts all confidential information from a text #006' do
       tokens = ['CLA']
       text = 'LEGAL DISCLAIMER - CLA will not be held reponsible for changes.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact).to eq("LEGAL DISCLAIMER - ***** will not be held reponsible for changes.")
+      expect(described_class.new(language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****').redact(text)).to eq("LEGAL DISCLAIMER - ***** will not be held reponsible for changes.")
     end
 
     it 'redacts all confidential information from a text #007' do
       tokens = ['Trans']
       text = 'My Transformation - avoid Trans.'
-      expect(described_class.new(text: text, language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****', hyperlink_text: '*****', email_text: '*****').redact).to eq('My Transformation - avoid *****.')
+      expect(described_class.new(language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****', hyperlink_text: '*****', email_text: '*****').redact(text)).to eq('My Transformation - avoid *****.')
     end
   end
 end
