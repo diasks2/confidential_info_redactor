@@ -181,5 +181,19 @@ RSpec.describe ConfidentialInfoRedactor::Redactor do
       text = 'My Transformation - avoid Trans.'
       expect(described_class.new(language: 'en', tokens: tokens, number_text: '**redacted number**', date_text: '^^redacted date^^', token_text: '*****', hyperlink_text: '*****', email_text: '*****').redact(text)).to eq('My Transformation - avoid *****.')
     end
+
+    it 'redacts all confidential information from a text #008' do
+      text = "The teacher took John's book from the shelf."
+      tokens = ConfidentialInfoRedactor::Extractor.new.extract(text)
+      expect(tokens).to eq(['John'])
+      expect(described_class.new(language: 'en', tokens: tokens).redact(text)).to eq("The teacher took <redacted>'s book from the shelf.")
+    end
+
+    it 'redacts all confidential information from a text #009' do
+      text = "The cat's toy rolled under the couch and disappeared."
+      tokens = ConfidentialInfoRedactor::Extractor.new.extract(text)
+      expect(tokens).to eq([])
+      expect(described_class.new(language: 'en', tokens: tokens).redact(text)).to eq("The cat's toy rolled under the couch and disappeared.")
+    end
   end
 end

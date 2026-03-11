@@ -62,6 +62,13 @@ ConfidentialInfoRedactor::Redactor.new.hyperlinks(text)
 ConfidentialInfoRedactor::Redactor.new(tokens: tokens).proper_nouns(text)
 # => '<redacted> announced a merger with <redacted> that will happen on December 15th, 2020 for $200,000,000,000. Please contact <redacted> at j.smith@example.com or visit http://www.super-fake-merger.com.'
 
+# Possessive proper nouns are handled automatically
+text = "The teacher took John's book from the shelf."
+tokens = ConfidentialInfoRedactor::Extractor.new.extract(text)
+# => ["John"]
+ConfidentialInfoRedactor::Redactor.new(tokens: tokens).redact(text)
+# => "The teacher took <redacted>'s book from the shelf."
+
 # It is possible to 'turn off' any of the specific redactors
 ConfidentialInfoRedactor::Redactor.new(tokens: tokens, ignore_numbers: true).redact(text)
 # => '<redacted> announced a merger with <redacted> that will happen on <redacted date> for $200,000,000,000. Please contact <redacted> at <redacted> or visit <redacted>.'

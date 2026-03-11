@@ -33,11 +33,11 @@ module ConfidentialInfoRedactor
     private
 
     def extract_preliminary_terms(segment)
-      segment.to_s.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(PUNCTUATION_REGEX, '').gsub(/\'$/, '')) }.compact
+      segment.to_s.gsub(EXTRACT_REGEX).map { |match| match unless corpus.include?(match.downcase.gsub(PUNCTUATION_REGEX, '').gsub(/\'s\z/, '').gsub(/\'$/, '')) }.compact
     end
 
     def clean_token(token)
-      token.gsub(PUNCTUATION_REGEX, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip
+      token.gsub(PUNCTUATION_REGEX, '').gsub(/\'s\z/, '').gsub(/\'$/, '').gsub(/\.\z/, '').strip
     end
 
     def non_confidential_token?(token, includes_confidential)

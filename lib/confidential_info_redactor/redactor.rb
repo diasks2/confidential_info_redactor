@@ -75,6 +75,7 @@ module ConfidentialInfoRedactor
 
     def redact_tokens(txt)
       tokens.sort_by{ |x| x.split.count }.reverse.each do |token|
+        txt.gsub!(/(?<=\s|^|\")#{Regexp.escape(token)}(?=['\u2019]s\b)/, "#{token_text}")
         txt.gsub!(/(?<=\s|^|\")#{Regexp.escape(token)}(?=\W|$)/, "#{token_text}")
       end
       txt.strip
